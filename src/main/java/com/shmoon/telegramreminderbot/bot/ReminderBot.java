@@ -71,6 +71,6 @@ public class ReminderBot extends TelegramLongPollingBot {
      * @throws TelegramApiException
      */
     private void sendHelpMessage(String chatId) throws TelegramApiException {
-        execute(SendMessage.builder().chatId(chatId).text("도움말입니다.").build());
+        execute(SendMessage.builder().chatId(chatId).text(Message.helpMsg).build());
     }
 }
