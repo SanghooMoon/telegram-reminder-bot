@@ -45,13 +45,11 @@ public class ReminderBot extends TelegramLongPollingBot {
      * @throws TelegramApiException
      */
     private void handleCommands(Update update) throws TelegramApiException {
-        if (hasCommand(update)) {
-            String chatId = String.valueOf(update.getMessage().getChatId());
-            String messageText = update.getMessage().getText();
+        String chatId = String.valueOf(update.getMessage().getChatId());
+        String messageText = update.getMessage().getText();
 
-            if (messageText.startsWith(Commands.help)) {
-                sendHelpMessage(chatId);
-            }
+        if (messageText.startsWith(Commands.help)) {
+            sendHelpMessage(chatId);
         }
     }
 
@@ -59,7 +57,9 @@ public class ReminderBot extends TelegramLongPollingBot {
      * 명령어(command)인지 확인하는 메서드
      *
      * @param update
+     * @deprecated 명령어 검증에 있어 불필요하여 처리
      */
+    @Deprecated
     private boolean hasCommand(Update update) {
         return update.getMessage().getEntities() != null && "bot_command".equals(update.getMessage().getEntities().get(0).getType());
     }
