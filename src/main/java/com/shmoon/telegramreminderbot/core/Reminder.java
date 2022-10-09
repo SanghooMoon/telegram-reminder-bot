@@ -18,6 +18,7 @@ public class Reminder {
     private final String msg;
     private final LocalTime reqTime;
 
+    // 생성자
     public Reminder(String chatId, String messageText) {
         try {
             String[] info = messageText.split(" ");
@@ -34,6 +35,11 @@ public class Reminder {
         }
     }
 
+    /**
+     * 등록메시지 연결 메서드
+     *
+     * @param info
+     */
     private String concatMsg(String[] info) {
         StringBuilder sb = new StringBuilder();
 
