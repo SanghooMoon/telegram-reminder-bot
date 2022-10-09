@@ -1,5 +1,10 @@
 package com.shmoon.telegramreminderbot.bot;
 
+import com.shmoon.telegramreminderbot.core.Reminder;
+import com.shmoon.telegramreminderbot.core.Tasks;
+import com.shmoon.telegramreminderbot.exception.ProcessException;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,9 +16,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
 @Component
+@RequiredArgsConstructor
 public class ReminderBot extends TelegramLongPollingBot {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Tasks tasks;
 
     @Value("${BOT_TOKEN_KEY}")
     private String botToken;
@@ -28,12 +35,16 @@ public class ReminderBot extends TelegramLongPollingBot {
         return botToken;
     }
 
+    @SneakyThrows(TelegramApiException.class)
     @Override
     public void onUpdateReceived(Update update) {
         try {
             handleCommands(update);
         } catch (TelegramApiException e) {
             logger.info("onUpdateReceived()", e);
+        } catch (ProcessException pe) {
+            logger.info(pe.getMessage());
+            execute(SendMessage.builder().chatId(pe.getChatId()).text(pe.getMessage()).build());
         }
 
     }
@@ -50,7 +61,25 @@ public class ReminderBot extends TelegramLongPollingBot {
 
         if (messageText.startsWith(Commands.help)) {
             sendHelpMessage(chatId);
+        } else if (messageText.startsWith(Commands.add)) {
+            addReminder(chatId, messageText);
         }
+    }
+
+    /**
+     * 
+     * 리마인더 등록
+     * 
+     * @param chatId
+     * @param messageText
+     * @throws TelegramApiException
+     */
+    private void addReminder(String chatId, String messageText) throws TelegramApiException {
+        Reminder reminder = new Reminder(chatId, messageText);
+
+        String result = tasks.addReminder(reminder);
+
+        execute(SendMessage.builder().chatId(chatId).text(result).build());
     }
 
     /**
