@@ -10,7 +10,9 @@ import java.util.List;
 @Service
 public class Tasks {
 
-    private Tasks() {}
+    private Tasks() {
+    }
+
     private final static List<Reminder> TASK_LIST = new ArrayList<>();
 
     /**
@@ -47,4 +49,26 @@ public class Tasks {
         return isDuplicate;
     }
 
+    /**
+     * 등록된 리마인더 정보 반환
+     *
+     * @param chatId
+     * @return
+     */
+    public String showReminder(String chatId) {
+        StringBuilder sb = new StringBuilder();
+
+//        for (Reminder reminder : TASK_LIST) {
+//            if(chatId.equals(reminder.getChatId())) {
+//                sb.append(reminder);
+//            }
+//        }
+        TASK_LIST.stream().filter(n -> chatId.equals(n.getChatId())).forEach(sb::append);
+
+        if (sb.length() < 1) {
+            sb.append(Message.NO_REMINDER);
+        }
+
+        return sb.toString();
+    }
 }

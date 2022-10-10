@@ -19,7 +19,7 @@ class TasksTest {
     @Test
     void 리마인더_등록_테스트() {
         // case
-        Reminder reminder = new Reminder("123", "/add 테스트 13:01 테스트입니다.");
+        Reminder reminder = new Reminder("123", "/add 테스트등록 13:01 테스트입니다.");
 
         // when
         String result = tasks.addReminder(reminder);
@@ -40,7 +40,7 @@ class TasksTest {
 
     }
 
-    @Test()
+    @Test
     void 리마인더_등록_중복ID() {
         ProcessException processException = assertThrows(ProcessException.class, () -> {
             Reminder reminder = new Reminder("123", "/add 테스트 13:01 테스트입니다.");
@@ -51,6 +51,28 @@ class TasksTest {
         });
 
         assertEquals(Message.DUPLICATE_ID, processException.getMessage());
+    }
+
+    @Test
+    void 리마인더_SHOW() {
+        // case
+        Reminder reminder = new Reminder("123", "/add 테스트 13:01 테스트입니다.");
+        tasks.addReminder(reminder);
+
+        // when
+        String result = tasks.showReminder("123");
+
+        // then
+        assertEquals(reminder.toString(), result);
+    }
+
+    @Test
+    void 리마인더_등록없음_SHOW() {
+        // when
+        String result = tasks.showReminder("123");
+
+        // then
+        assertEquals(Message.NO_REMINDER, result);
     }
 
 

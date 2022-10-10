@@ -10,7 +10,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
-@ToString
 public class Reminder {
 
     private final String chatId;
@@ -48,5 +47,15 @@ public class Reminder {
         }
 
         return sb.deleteCharAt(sb.length() - 1).toString();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("[이름(ID)=").append(id).append(", 요청시간=").append(reqTime.format(DateTimeFormatter.ofPattern("H:mm")))
+          .append("]\n").append(msg).append("\n\n");
+
+        return sb.toString();
     }
 }
