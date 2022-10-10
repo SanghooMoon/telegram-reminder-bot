@@ -63,7 +63,19 @@ public class ReminderBot extends TelegramLongPollingBot {
             sendHelpMessage(chatId);
         } else if (messageText.startsWith(Commands.add)) {
             addReminder(chatId, messageText);
+        } else if (messageText.startsWith(Commands.show)) {
+            showReminder(chatId);
         }
+    }
+
+    /**
+     * 등록된 리마인더 정보 확인
+     * 
+     * @param chatId
+     */
+    private void showReminder(String chatId) throws TelegramApiException {
+        String showMsg = tasks.showReminder(chatId);
+        execute(SendMessage.builder().chatId(chatId).text(showMsg).build());
     }
 
     /**
